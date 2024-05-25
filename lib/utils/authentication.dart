@@ -1,9 +1,10 @@
-import 'package:flutterfire_samples/screen/user_info_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
+import 'package:flutterfire_samples/screen/sign_in_screen.dart';
+import 'package:flutterfire_samples/screen/user_info_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class Authentication {
   static SnackBar customSnackBar({required String content}) {
@@ -11,7 +12,7 @@ class Authentication {
       backgroundColor: Colors.black,
       content: Text(
         content,
-        style: TextStyle(color: Colors.redAccent, letterSpacing: 0.5),
+        style: const TextStyle(color: Colors.redAccent, letterSpacing: 0.5),
       ),
     );
   }
@@ -26,9 +27,7 @@ class Authentication {
     if (user != null) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => UserInfoScreen(
-            user: user,
-          ),
+          builder: (context) => UserInfoScreen(user: user),
         ),
       );
     }
@@ -104,9 +103,18 @@ class Authentication {
     final GoogleSignIn googleSignIn = GoogleSignIn();
 
     try {
-      await FirebaseAuth.instance.signOut();
-      await googleSignIn.signOut();
-      print('Sign out successful');
+      if (kIsWeb) {
+        await FirebaseAuth.instance.signOut();
+      } else {
+        await FirebaseAuth.instance.signOut();
+        await googleSignIn.signOut();
+      }
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => SignInScreen(),
+        ),
+      );
     } catch (e) {
       print('Error signing out: $e');
       ScaffoldMessenger.of(context).showSnackBar(

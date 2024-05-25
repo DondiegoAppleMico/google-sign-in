@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'screen/sign_in_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
+import 'firebase_options.dart'; // Make sure you have this file generated and properly configured
+import 'screen/sign_in_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
